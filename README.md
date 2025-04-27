@@ -1,0 +1,2 @@
+# sphaera
+Meetup organization engine
