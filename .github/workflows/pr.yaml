@@ -28,10 +28,10 @@ jobs:
         pip install -U 'poetry<3'
         poetry install
     - name: Check types
-      run: poe mypy
+      run: poetry run poe mypy
     - name: Format and lint
-      run: poe ruff
+      run: poetry run poe ruff
     - name: Run bandit
-      run: poe bandit
+      run: poetry run poe bandit
     - name: Run tests
-      run: poe test
+      run: poetry run poe test
