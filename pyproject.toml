@@ -1,12 +1,20 @@
 [project]
 name = "sphaera"
-version = "0.1.0"
 description = "Meetup organization engine"
 authors = [{ name = "fernroot", email = "arnaldojaws@gmail.com" }]
 license = { text = "BSD-3-Clause license" }
 readme = "README.md"
 requires-python = ">=3.12,<3.13"
 dependencies = []
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.15.0"
+pytest = "^8.3.5"
+ruff = "^0.11.7"
+poethepoet = "^0.34.0"
+pytest-cov = "^6.1.1"
+pre-commit = "^4.2.0"
+bandit = "^1.8.3"
 
 [tool.poetry]
 package-mode = false
@@ -15,9 +23,34 @@ package-mode = false
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.poetry.group.dev.dependencies]
-mypy = "^1.15.0"
-ruff = "^0.11.7"
+# Poe
+
+[tool.poe.tasks]
+mypy = "mypy --config-file=pyproject.toml src"
+ruff = [
+    {cmd = "ruff --config=pyproject.toml format src tests"},
+    {cmd = "ruff --config=pyproject.toml check --fix src tests"},
+]
+bandit = "bandit -r src"
+test = "pytest --config-file=pyproject.toml --cov-config=pyproject.toml --cov tests"
+update = [
+    { cmd = "pip install -U pip" },
+    { cmd = "pip install -U 'poetry<3'" },
+    { cmd = "pre-commit autoupdate" },
+    { cmd = "poetry update" },
+    { cmd = "poetry show -o" }
+]
+
+# Coverage
+
+[tool.coverage.run]
+source = ["src"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
+skip_covered = true
 
 # Mypy
 
@@ -58,3 +91,15 @@ output-format = "concise"
 
 [tool.ruff.lint]
 select = ["ALL"]
+ignore = ["COM"]
+
+[tool.ruff.lint.pydocstyle]
+convention = "pep257"
+
+[tool.ruff.lint.extend-per-file-ignores]
+"tests/*" = ["ANN", "D", "S"]
+
+# Bandit
+
+[tool.bandit]
+exclude_dirs = ["tests"]
