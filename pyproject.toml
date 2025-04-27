@@ -1,0 +1,60 @@
+[project]
+name = "sphaera"
+version = "0.1.0"
+description = "Meetup organization engine"
+authors = [{ name = "fernroot", email = "arnaldojaws@gmail.com" }]
+license = { text = "BSD-3-Clause license" }
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = []
+
+[tool.poetry]
+package-mode = false
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.15.0"
+ruff = "^0.11.7"
+
+# Mypy
+
+[tool.mypy]
+check_untyped_defs = true
+color_output = true
+disallow_any_decorated = true
+disallow_any_explicit = true
+disallow_any_expr = true
+disallow_any_generics = true
+disallow_any_unimported = true
+disallow_incomplete_defs = true
+disallow_subclassing_any = true
+disallow_untyped_calls = true
+disallow_untyped_decorators = true
+disallow_untyped_defs = true
+exclude = ["tests/.*"]
+pretty = true
+python_version = "3.12"
+show_error_context = true
+warn_incomplete_stub = true
+warn_no_return = true
+warn_redundant_casts = true
+warn_return_any = true
+warn_unreachable = true
+warn_unused_configs = true
+warn_unused_ignores = true
+
+[[tool.mypy.overrides]]
+module = 'tests.*'
+ignore_errors = true
+
+# Ruff
+
+[tool.ruff]
+fix = true
+output-format = "concise"
+
+[tool.ruff.lint]
+select = ["ALL"]
