@@ -28,17 +28,17 @@ build-backend = "poetry.core.masonry.api"
 [tool.poe.tasks]
 mypy = "mypy --config-file=pyproject.toml src"
 ruff = [
-    {cmd = "ruff --config=pyproject.toml format src tests"},
-    {cmd = "ruff --config=pyproject.toml check --fix src tests"},
+    { cmd = "ruff --config=pyproject.toml format src tests" },
+    { cmd = "ruff --config=pyproject.toml check --fix src tests" },
 ]
-bandit = "bandit -r src"
+bandit = "bandit -r backend"
 test = "pytest --config-file=pyproject.toml --cov-config=pyproject.toml --cov tests"
 update = [
     { cmd = "pip install -U pip" },
     { cmd = "pip install -U 'poetry<3'" },
     { cmd = "pre-commit autoupdate" },
     { cmd = "poetry update" },
-    { cmd = "poetry show -o" }
+    { cmd = "poetry show -o" },
 ]
 
 # Coverage
@@ -98,6 +98,7 @@ convention = "pep257"
 
 [tool.ruff.lint.extend-per-file-ignores]
 "tests/*" = ["ANN", "D", "S"]
+"backend/tests/*" = ["ANN", "D", "S"]
 
 # Bandit
 

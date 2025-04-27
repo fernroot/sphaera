@@ -3,35 +3,57 @@ name: Run linters and tests
 on:
   pull_request:
     branches:
-      - '**'
+      - "**"
   push:
     branches:
       - main
 
 jobs:
-  build:
-
+  check-backend:
     runs-on: ubuntu-latest
     strategy:
       matrix:
         python-version: [3.12]
-
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v5
-      with:
-        python-version: ${{ matrix.python-version }}
-    - name: Install dependencies
-      run: |
-        pip install -U pip
-        pip install -U 'poetry<3'
-        poetry install
-    - name: Check types
-      run: poetry run poe mypy
-    - name: Format and lint
-      run: poetry run poe ruff
-    - name: Run bandit
-      run: poetry run poe bandit
-    - name: Run tests
-      run: poetry run poe test
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        working-directory: ./backend
+        run: |
+          pip install -U pip
+          pip install -U 'poetry<3'
+          poetry install
+      - name: Check types
+        run: poetry -C backend run poe mypy
+      - name: Format and lint
+        run: poetry -C backend run poe ruff
+      - name: Run bandit
+        run: poetry -C backend run poe bandit
+      - name: Run tests
+        run: poetry -C backend run poe test
+  check-frontend:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.12]
+    steps:
+      - uses: actions/checkout@v4
+      - name: install node v22
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Install modules
+        working-directory: ./frontend
+        run: yarn
+      - name: Run eslint
+        working-directory: ./frontend
+        run: yarn run eslint src
+      - name: tsc
+        working-directory: ./frontend
+        run: yarn tsc
+      - name: Test
+        working-directory: ./frontend
+        run: CI=true yarn test
