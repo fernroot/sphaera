@@ -44,7 +44,7 @@ update = [
 # Coverage
 
 [tool.coverage.run]
-source = "src"
+source = ["src"]
 branch = true
 
 [tool.coverage.report]
